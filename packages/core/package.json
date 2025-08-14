@@ -15,6 +15,8 @@
 		"build": "tsup",
 		"dev": "tsup --watch",
 		"test": "bun test",
+		"test:coverage": "bun test --coverage",
+		"test:coverage:html": "bun test --coverage --coverage-reporter=html",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

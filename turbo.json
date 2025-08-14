@@ -16,6 +16,10 @@
 			"outputs": ["coverage/**"],
 			"env": ["CI"]
 		},
+		"test:coverage": {
+			"dependsOn": ["build"],
+			"env": ["CI"]
+		},
 		"lint": {
 			"dependsOn": ["^build"]
 		},

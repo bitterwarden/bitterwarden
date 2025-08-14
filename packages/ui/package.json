@@ -18,6 +18,8 @@
 	"scripts": {
 		"build": "tsup",
 		"dev": "tsup --watch",
+		"test": "bun test",
+		"test:coverage": "bun test --coverage",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
@@ -34,9 +36,12 @@
 		"tailwind-merge": "^2.0.0"
 	},
 	"devDependencies": {
+		"@happy-dom/global-registrator": "^18.0.1",
+		"@testing-library/react": "^16.3.0",
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.0",
 		"autoprefixer": "^10.4.0",
+		"happy-dom": "^18.0.1",
 		"postcss": "^8.4.0",
 		"tailwindcss": "^3.3.0",
 		"tsup": "^8.0.0",

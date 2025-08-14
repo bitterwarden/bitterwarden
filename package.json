@@ -12,6 +12,7 @@
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"test": "turbo test",
+		"test:coverage": "turbo test:coverage",
 		"typecheck": "turbo typecheck",
 		"clean": "turbo clean && rm -rf node_modules",
 		"pretty:write": "biome format --write",

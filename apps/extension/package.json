@@ -7,6 +7,8 @@
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
+		"test": "bun test",
+		"test:coverage": "bun test --coverage",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
@@ -17,6 +19,8 @@
 		"webextension-polyfill": "^0.10.0"
 	},
 	"devDependencies": {
+		"@happy-dom/global-registrator": "^18.0.1",
+		"@testing-library/react": "^16.3.0",
 		"@types/chrome": "^0.0.251",
 		"@types/react": "^18.2.0",
 		"@types/react-dom": "^18.2.0",
