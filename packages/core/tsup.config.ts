@@ -1,12 +1,12 @@
-import { defineConfig } from 'tsup';
+import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ['src/index.ts'],
-  format: ['cjs', 'esm'],
-  dts: true,
-  clean: true,
-  sourcemap: true,
-  splitting: false,
-  treeshake: true,
-  minify: process.env.NODE_ENV === 'production',
+	entry: ["src/index.ts"],
+	format: ["cjs", "esm"],
+	dts: true,
+	clean: true,
+	sourcemap: true,
+	splitting: false,
+	treeshake: true,
+	minify: process.env.NODE_ENV === "production",
 });

@@ -1,29 +1,30 @@
 {
-  "name": "bitterwarden",
-  "version": "0.0.1",
-  "private": true,
-  "description": "Offline-first password manager with Git sync",
-  "packageManager": "bun@1.2.18",
-  "workspaces": [
-    "packages/*",
-    "apps/*"
-  ],
-  "scripts": {
-    "dev": "turbo dev",
-    "build": "turbo build",
-    "test": "turbo test",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    "clean": "turbo clean && rm -rf node_modules"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/node": "^20.0.0",
-    "prettier": "^3.0.0",
-    "turbo": "^2.0.0",
-    "typescript": "^5.0.0"
-  },
-  "engines": {
-    "bun": ">=1.0.0"
-  }
+	"name": "bitterwarden",
+	"version": "0.0.1",
+	"private": true,
+	"description": "Offline-first password manager with Git sync",
+	"packageManager": "bun@1.2.18",
+	"workspaces": [
+		"packages/*",
+		"apps/*"
+	],
+	"scripts": {
+		"dev": "turbo dev",
+		"build": "turbo build",
+		"test": "turbo test",
+		"lint": "turbo lint",
+		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+		"clean": "turbo clean && rm -rf node_modules"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.4",
+		"@types/bun": "latest",
+		"@types/node": "^20.0.0",
+		"prettier": "^3.0.0",
+		"turbo": "^2.0.0",
+		"typescript": "^5.0.0"
+	},
+	"engines": {
+		"bun": ">=1.0.0"
+	}
 }
