@@ -1,11 +1,15 @@
 import { beforeEach, describe, expect, it, mock } from "bun:test";
 
 // Create mock functions that can be updated
-const mockAsyncStorageGetItem = mock(() => Promise.resolve(null));
+const mockAsyncStorageGetItem = mock<() => Promise<string | null>>(() =>
+	Promise.resolve(null),
+);
 const mockAsyncStorageSetItem = mock(() => Promise.resolve());
 const mockAsyncStorageRemoveItem = mock(() => Promise.resolve());
 
-const mockSecureStoreGetItemAsync = mock(() => Promise.resolve(null));
+const mockSecureStoreGetItemAsync = mock<() => Promise<string | null>>(() =>
+	Promise.resolve(null),
+);
 const mockSecureStoreSetItemAsync = mock(() => Promise.resolve());
 const mockSecureStoreDeleteItemAsync = mock(() => Promise.resolve());
 

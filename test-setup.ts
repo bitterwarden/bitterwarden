@@ -43,12 +43,21 @@ const mockBrowserAPI = {
 	},
 };
 
-// Extend the global object to include chrome and browser
+// Define mock browser API type
+type MockBrowserAPI = typeof mockBrowserAPI;
+
+// Extend the global object
 declare global {
-	let chrome: typeof mockBrowserAPI;
-	let browser: typeof mockBrowserAPI;
+	interface Window {
+		chrome: MockBrowserAPI;
+		browser: MockBrowserAPI;
+	}
+	let chrome: MockBrowserAPI;
+	let browser: MockBrowserAPI;
 }
 
-// Both chrome and browser globals are needed for extension tests
-globalThis.chrome = mockBrowserAPI;
-globalThis.browser = mockBrowserAPI;
+// Set the mocks on global using Object.assign to avoid type errors
+Object.assign(globalThis, {
+	chrome: mockBrowserAPI,
+	browser: mockBrowserAPI,
+});

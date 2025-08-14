@@ -1,0 +1,9 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"types": ["bun", "@happy-dom/global-registrator"],
+		"lib": ["ES2022", "DOM", "DOM.Iterable"]
+	},
+	"include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test-setup.ts"],
+	"exclude": ["node_modules", "dist"]
+}
