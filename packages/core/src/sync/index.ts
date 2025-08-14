@@ -1,6 +1,6 @@
 import git from "isomorphic-git";
 import http from "isomorphic-git/http/web";
-import type { GitConfig, SyncStatus, EncryptedVault } from "../types";
+import type { EncryptedVault, GitConfig, SyncStatus } from "../types";
 
 export class GitSyncService {
 	private config: GitConfig | null = null;

@@ -1,7 +1,7 @@
 import * as React from "react";
+import { cn } from "../lib/utils";
 import { Button } from "./Button";
 import { Input } from "./Input";
-import { cn } from "../lib/utils";
 
 interface PasswordGeneratorProps {
 	onGenerate?: (password: string) => void;

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-	View,
-	Text,
-	Switch,
-	TouchableOpacity,
-	StyleSheet,
-	ScrollView,
 	Alert,
+	ScrollView,
+	StyleSheet,
+	Switch,
+	Text,
+	TouchableOpacity,
+	View,
 } from "react-native";
 import { useVault } from "../contexts/VaultContext";
 

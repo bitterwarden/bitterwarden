@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar } from "expo-status-bar";
 import * as LocalAuthentication from "expo-local-authentication";
 import * as SecureStore from "expo-secure-store";
-
-import { VaultScreen } from "./src/screens/VaultScreen";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { VaultProvider } from "./src/contexts/VaultContext";
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
-import { VaultProvider } from "./src/contexts/VaultContext";
+import { VaultScreen } from "./src/screens/VaultScreen";
 
 const Stack = createNativeStackNavigator();
 

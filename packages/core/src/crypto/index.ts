@@ -17,7 +17,7 @@ export class CryptoService {
 		// Use PBKDF2 for now, can switch to Argon2 later with proper WASM setup
 		const keyMaterial = await crypto.subtle.importKey(
 			"raw",
-			this.encoder.encode(password),
+			CryptoService.encoder.encode(password),
 			"PBKDF2",
 			false,
 			["deriveBits", "deriveKey"],
@@ -26,7 +26,7 @@ export class CryptoService {
 		return crypto.subtle.deriveKey(
 			{
 				name: "PBKDF2",
-				salt: this.toArrayBuffer(salt),
+				salt: CryptoService.toArrayBuffer(salt),
 				iterations: 100000,
 				hash: "SHA-256",
 			},
@@ -42,7 +42,7 @@ export class CryptoService {
 		key: CryptoKey,
 	): Promise<{ encrypted: ArrayBuffer; iv: Uint8Array }> {
 		const iv = crypto.getRandomValues(new Uint8Array(12));
-		const encoded = this.encoder.encode(data);
+		const encoded = CryptoService.encoder.encode(data);
 
 		const encrypted = await crypto.subtle.encrypt(
 			{ name: "AES-GCM", iv },
@@ -59,12 +59,12 @@ export class CryptoService {
 		iv: Uint8Array,
 	): Promise<string> {
 		const decrypted = await crypto.subtle.decrypt(
-			{ name: "AES-GCM", iv: this.toArrayBuffer(iv) },
+			{ name: "AES-GCM", iv: CryptoService.toArrayBuffer(iv) },
 			key,
 			encrypted,
 		);
 
-		return this.decoder.decode(decrypted);
+		return CryptoService.decoder.decode(decrypted);
 	}
 
 	static generateSalt(): Uint8Array {
@@ -72,8 +72,8 @@ export class CryptoService {
 	}
 
 	static async hashPassword(password: string): Promise<string> {
-		const salt = this.generateSalt();
-		const key = await this.deriveKey(password, salt);
+		const salt = CryptoService.generateSalt();
+		const key = await CryptoService.deriveKey(password, salt);
 		const exported = await crypto.subtle.exportKey("raw", key);
 		const hashBuffer = new Uint8Array(exported);
 
@@ -90,7 +90,7 @@ export class CryptoService {
 		const salt = Buffer.from(saltBase64, "base64");
 		const expectedHash = Buffer.from(hashBase64, "base64");
 
-		const key = await this.deriveKey(password, new Uint8Array(salt));
+		const key = await CryptoService.deriveKey(password, new Uint8Array(salt));
 		const exported = await crypto.subtle.exportKey("raw", key);
 		const actualHash = new Uint8Array(exported);
 

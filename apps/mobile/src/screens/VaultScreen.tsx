@@ -1,15 +1,15 @@
+import type { VaultItem } from "@bitterwarden/core";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-	View,
-	Text,
-	FlatList,
-	TouchableOpacity,
-	StyleSheet,
 	Alert,
+	FlatList,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useVault } from "../contexts/VaultContext";
-import type { VaultItem } from "@bitterwarden/core";
 
 export function VaultScreen() {
 	const navigation = useNavigation<any>();

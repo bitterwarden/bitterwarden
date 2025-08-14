@@ -13,8 +13,13 @@
 		"build": "turbo build",
 		"test": "turbo test",
 		"lint": "turbo lint",
-		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
-		"clean": "turbo clean && rm -rf node_modules"
+		"clean": "turbo clean && rm -rf node_modules",
+		"pretty:write": "biome format --write",
+		"pretty": "biome format",
+		"lint:write": "biome lint --write",
+		"lint": "biome lint",
+		"check:write": "biome check --write",
+		"check": "biome check"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.1.4",

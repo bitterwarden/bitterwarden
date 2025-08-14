@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import browser from "webextension-polyfill";
-import { Button } from "@bitterwarden/ui";
 import type { VaultItem } from "@bitterwarden/core";
+import { Button } from "@bitterwarden/ui";
+import React, { useEffect, useState } from "react";
+import browser from "webextension-polyfill";
 
 export function App() {
 	const [isLocked, setIsLocked] = useState(true);

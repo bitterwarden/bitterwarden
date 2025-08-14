@@ -1,15 +1,15 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
-	View,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	StyleSheet,
 	Alert,
 	KeyboardAvoidingView,
 	Platform,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { useVault } from "../contexts/VaultContext";
 
 export function LoginScreen() {

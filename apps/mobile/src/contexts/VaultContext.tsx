@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+	type EncryptedVault,
+	type VaultItem,
+	VaultService,
+} from "@bitterwarden/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
-import {
-	VaultService,
-	type VaultItem,
-	type EncryptedVault,
-} from "@bitterwarden/core";
+import type React from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface VaultContextType {
 	vault: VaultService | null;

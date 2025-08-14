@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 import { $ } from "bun";
-import { mkdir, cp } from "fs/promises";
+import { cp, mkdir } from "fs/promises";
 import { join } from "path";
 
 const extensionDir = join(process.cwd(), "apps/extension");

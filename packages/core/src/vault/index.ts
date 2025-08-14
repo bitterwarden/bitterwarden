@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { CryptoService } from "../crypto";
-import type { Vault, VaultItem, EncryptedVault } from "../types";
+import type { EncryptedVault, Vault, VaultItem } from "../types";
 import { VaultSchema } from "../types";
 import { SecureMemoryPool } from "./secure-memory";
 
