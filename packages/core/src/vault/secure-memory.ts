@@ -4,7 +4,6 @@
  */
 export class SecureMemory {
 	private data: Uint8Array | null = null;
-	private view: DataView | null = null;
 
 	constructor(size: number) {
 		// Allocate memory for sensitive data

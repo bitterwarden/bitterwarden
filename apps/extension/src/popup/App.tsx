@@ -1,6 +1,6 @@
 import type { VaultItem } from "@bitterwarden/core";
 import { Button } from "@bitterwarden/ui";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import browser from "webextension-polyfill";
 
 export function App() {
@@ -8,14 +8,14 @@ export function App() {
 	const [items, setItems] = useState<VaultItem[]>([]);
 	const [password, setPassword] = useState("");
 
-	useEffect(() => {
-		checkVaultStatus();
-	}, []);
-
-	async function checkVaultStatus() {
+	const checkVaultStatus = useCallback(async () => {
 		const storage = await browser.storage.local.get("vault");
 		setIsLocked(!!storage.vault);
-	}
+	}, []);
+
+	useEffect(() => {
+		checkVaultStatus();
+	}, [checkVaultStatus]);
 
 	async function unlock() {
 		const storage = await browser.storage.local.get("vault");
@@ -29,7 +29,7 @@ export function App() {
 			setIsLocked(false);
 			loadItems();
 		} else {
-			alert("Failed to unlock: " + response.error);
+			alert(`Failed to unlock: ${response.error}`);
 		}
 	}
 

@@ -1,8 +1,4 @@
-import {
-	type EncryptedVault,
-	type VaultItem,
-	VaultService,
-} from "@bitterwarden/core";
+import { type VaultItem, VaultService } from "@bitterwarden/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import type React from "react";
@@ -59,7 +55,7 @@ export function VaultProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	function addItem(item: Omit<VaultItem, "id" | "createdAt" | "updatedAt">) {
-		const newItem = vault.addItem(item);
+		const _newItem = vault.addItem(item);
 		setItems(vault.getAllItems());
 	}
 

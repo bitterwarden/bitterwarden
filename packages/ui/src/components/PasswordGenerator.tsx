@@ -45,8 +45,11 @@ export function PasswordGenerator({
 	return (
 		<div className={cn("space-y-4", className)}>
 			<div>
-				<label className="text-sm font-medium">Length: {length}</label>
+				<label htmlFor="password-length" className="text-sm font-medium">
+					Length: {length}
+				</label>
 				<input
+					id="password-length"
 					type="range"
 					min="8"
 					max="128"

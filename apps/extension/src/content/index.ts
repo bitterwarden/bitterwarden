@@ -1,5 +1,12 @@
 import browser from "webextension-polyfill";
 
+interface Credential {
+	id: string;
+	name: string;
+	username?: string;
+	url?: string;
+}
+
 // Listen for messages from the background script
 browser.runtime.onMessage.addListener((request) => {
 	if (request.type === "PAGE_LOADED") {
@@ -9,7 +16,7 @@ browser.runtime.onMessage.addListener((request) => {
 
 function detectPasswordFields() {
 	const passwordFields = document.querySelectorAll('input[type="password"]');
-	const usernameFields = document.querySelectorAll(
+	const _usernameFields = document.querySelectorAll(
 		'input[type="text"], input[type="email"]',
 	);
 
@@ -52,8 +59,8 @@ function createAutofillIcon(): HTMLElement {
 }
 
 function showCredentialSelector(
-	credentials: any[],
-	field: HTMLInputElement,
+	credentials: Credential[],
+	_field: HTMLInputElement,
 ): void {
 	// Implementation for showing credential selector UI
 	console.log("Available credentials:", credentials);

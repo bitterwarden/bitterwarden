@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useState } from "react";
 import {
 	Alert,
 	KeyboardAvoidingView,
@@ -11,11 +12,14 @@ import {
 	View,
 } from "react-native";
 import { useVault } from "../contexts/VaultContext";
+import type { RootStackParamList } from "../types/navigation";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
 
 export function LoginScreen() {
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const navigation = useNavigation<any>();
+	const navigation = useNavigation<NavigationProp>();
 	const { unlock } = useVault();
 
 	async function handleUnlock() {

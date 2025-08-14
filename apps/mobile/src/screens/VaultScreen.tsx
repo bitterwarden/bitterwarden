@@ -1,6 +1,6 @@
 import type { VaultItem } from "@bitterwarden/core";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import {
 	Alert,
 	FlatList,
@@ -10,9 +10,12 @@ import {
 	View,
 } from "react-native";
 import { useVault } from "../contexts/VaultContext";
+import type { RootStackParamList } from "../types/navigation";
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Vault">;
 
 export function VaultScreen() {
-	const navigation = useNavigation<any>();
+	const navigation = useNavigation<NavigationProp>();
 	const { items, lock, deleteItem } = useVault();
 
 	async function handleLock() {

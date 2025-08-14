@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
 	Alert,
 	ScrollView,
@@ -8,10 +8,8 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { useVault } from "../contexts/VaultContext";
 
 export function SettingsScreen() {
-	const { vault } = useVault();
 	const [autoSync, setAutoSync] = useState(false);
 	const [biometricUnlock, setBiometricUnlock] = useState(true);
 

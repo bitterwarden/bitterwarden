@@ -2,6 +2,12 @@ import git from "isomorphic-git";
 import http from "isomorphic-git/http/web";
 import type { EncryptedVault, GitConfig, SyncStatus } from "../types";
 
+interface FileSystem {
+	writeFile(path: string, data: string): Promise<void>;
+	readFile(path: string): Promise<string>;
+	exists(path: string): Promise<boolean>;
+}
+
 export class GitSyncService {
 	private config: GitConfig | null = null;
 	private status: SyncStatus = {
@@ -48,7 +54,7 @@ export class GitSyncService {
 		}
 	}
 
-	async clone(fs: any, dir: string): Promise<void> {
+	async clone(fs: FileSystem, dir: string): Promise<void> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -66,8 +72,8 @@ export class GitSyncService {
 				singleBranch: true,
 				depth: 1,
 				onAuth: () => ({
-					username: this.config!.username || "token",
-					password: this.config!.authToken!,
+					username: this.config?.username || "token",
+					password: this.config?.authToken || "",
 				}),
 			});
 
@@ -81,7 +87,7 @@ export class GitSyncService {
 		}
 	}
 
-	async pull(fs: any, dir: string): Promise<boolean> {
+	async pull(fs: FileSystem, dir: string): Promise<boolean> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -99,8 +105,8 @@ export class GitSyncService {
 				ref: this.config.branch,
 				singleBranch: true,
 				onAuth: () => ({
-					username: this.config!.username || "token",
-					password: this.config!.authToken!,
+					username: this.config?.username || "token",
+					password: this.config?.authToken || "",
 				}),
 			});
 
@@ -117,7 +123,11 @@ export class GitSyncService {
 		}
 	}
 
-	async push(fs: any, dir: string, vault: EncryptedVault): Promise<void> {
+	async push(
+		fs: FileSystem,
+		dir: string,
+		vault: EncryptedVault,
+	): Promise<void> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -148,8 +158,8 @@ export class GitSyncService {
 				remote: "origin",
 				ref: this.config.branch,
 				onAuth: () => ({
-					username: this.config!.username || "token",
-					password: this.config!.authToken!,
+					username: this.config?.username || "token",
+					password: this.config?.authToken || "",
 				}),
 			});
 
@@ -164,7 +174,7 @@ export class GitSyncService {
 		}
 	}
 
-	async checkForUpdates(fs: any, dir: string): Promise<boolean> {
+	async checkForUpdates(fs: FileSystem, dir: string): Promise<boolean> {
 		if (!this.config) return false;
 
 		try {
@@ -173,8 +183,8 @@ export class GitSyncService {
 				url: this.config.remote,
 				prefix: `refs/heads/${this.config.branch}`,
 				onAuth: () => ({
-					username: this.config!.username || "token",
-					password: this.config!.authToken!,
+					username: this.config?.username || "token",
+					password: this.config?.authToken || "",
 				}),
 			});
 

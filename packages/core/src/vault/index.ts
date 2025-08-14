@@ -1,12 +1,11 @@
-import { z } from "zod";
-import { CryptoService } from "../crypto";
+import { decrypt, encrypt } from "../crypto";
 import type { EncryptedVault, Vault, VaultItem } from "../types";
 import { VaultSchema } from "../types";
 import { SecureMemoryPool } from "./secure-memory";
 
 export class VaultService {
 	private vault: Vault;
-	private masterKey: CryptoKey | null = null;
+	private masterPassword: string | null = null;
 	private memoryPool: SecureMemoryPool;
 	private autoLockTimer: NodeJS.Timeout | null = null;
 	private readonly AUTO_LOCK_TIME = 5 * 60 * 1000; // 5 minutes
@@ -33,7 +32,7 @@ export class VaultService {
 		}
 
 		// Set new auto-lock timer
-		if (this.masterKey) {
+		if (this.masterPassword) {
 			this.autoLockTimer = setTimeout(() => {
 				this.lock();
 			}, this.AUTO_LOCK_TIME);
@@ -49,48 +48,26 @@ export class VaultService {
 		encryptedVault?: EncryptedVault,
 	): Promise<void> {
 		if (encryptedVault) {
-			const salt = Buffer.from(encryptedVault.salt, "base64");
-			const iv = Buffer.from(encryptedVault.iv, "base64");
-			const data = Buffer.from(encryptedVault.data, "base64");
-
-			this.masterKey = await CryptoService.deriveKey(
-				password,
-				new Uint8Array(salt),
-			);
-
-			// Create a proper ArrayBuffer from the Buffer
-			const dataArrayBuffer = new ArrayBuffer(data.length);
-			const dataView = new Uint8Array(dataArrayBuffer);
-			dataView.set(data);
-
-			const decrypted = await CryptoService.decrypt(
-				dataArrayBuffer,
-				this.masterKey,
-				new Uint8Array(iv),
-			);
-
+			// Decrypt existing vault
+			const decrypted = await decrypt(encryptedVault.data, password);
 			const parsed = JSON.parse(decrypted);
 			this.vault = VaultSchema.parse(parsed);
+			this.masterPassword = password;
 		} else {
-			const salt = CryptoService.generateSalt();
-			this.masterKey = await CryptoService.deriveKey(password, salt);
+			// Create new vault
+			this.masterPassword = password;
 		}
+		this.setupAutoLock();
 	}
 
 	async lock(): Promise<EncryptedVault | null> {
-		if (!this.masterKey) return null;
-
-		const salt = CryptoService.generateSalt();
-		const key = await CryptoService.deriveKey(
-			await this.exportMasterKey(),
-			salt,
-		);
+		if (!this.masterPassword) return null;
 
 		const vaultString = JSON.stringify(this.vault);
-		const { encrypted, iv } = await CryptoService.encrypt(vaultString, key);
+		const encryptedData = await encrypt(vaultString, this.masterPassword);
 
 		// Clear sensitive data from memory
-		this.masterKey = null;
+		this.masterPassword = null;
 		this.vault.items = [];
 		this.memoryPool.wipeAll();
 
@@ -100,18 +77,13 @@ export class VaultService {
 			this.autoLockTimer = null;
 		}
 
+		// The encrypt function now returns a base64 string with salt+iv+data combined
 		return {
-			salt: Buffer.from(salt).toString("base64"),
-			iv: Buffer.from(iv).toString("base64"),
-			data: Buffer.from(encrypted).toString("base64"),
+			salt: "", // Not needed as it's embedded in data
+			iv: "", // Not needed as it's embedded in data
+			data: encryptedData,
 			version: this.vault.version,
 		};
-	}
-
-	private async exportMasterKey(): Promise<string> {
-		if (!this.masterKey) throw new Error("Vault is locked");
-		const exported = await crypto.subtle.exportKey("raw", this.masterKey);
-		return Buffer.from(exported).toString("base64");
 	}
 
 	addItem(item: Omit<VaultItem, "id" | "createdAt" | "updatedAt">): VaultItem {
@@ -129,14 +101,15 @@ export class VaultService {
 	}
 
 	updateItem(id: string, updates: Partial<VaultItem>): VaultItem | null {
+		this.resetAutoLock(); // Reset timer on activity
+
 		const index = this.vault.items.findIndex((item) => item.id === id);
 		if (index === -1) return null;
 
 		const updatedItem = {
 			...this.vault.items[index],
 			...updates,
-			id: this.vault.items[index].id,
-			createdAt: this.vault.items[index].createdAt,
+			id, // Preserve original ID
 			updatedAt: new Date().toISOString(),
 		};
 
@@ -145,6 +118,8 @@ export class VaultService {
 	}
 
 	deleteItem(id: string): boolean {
+		this.resetAutoLock(); // Reset timer on activity
+
 		const index = this.vault.items.findIndex((item) => item.id === id);
 		if (index === -1) return false;
 
@@ -153,23 +128,40 @@ export class VaultService {
 	}
 
 	getItem(id: string): VaultItem | null {
+		this.resetAutoLock(); // Reset timer on activity
 		return this.vault.items.find((item) => item.id === id) || null;
 	}
 
 	getAllItems(): VaultItem[] {
+		this.resetAutoLock(); // Reset timer on activity
 		return [...this.vault.items];
 	}
 
 	searchItems(query: string): VaultItem[] {
-		const lowerQuery = query.toLowerCase();
+		this.resetAutoLock(); // Reset timer on activity
+
+		const lowercaseQuery = query.toLowerCase();
 		return this.vault.items.filter(
 			(item) =>
-				item.name.toLowerCase().includes(lowerQuery) ||
-				item.username?.toLowerCase().includes(lowerQuery) ||
-				item.url?.toLowerCase().includes(lowerQuery) ||
-				item.notes?.toLowerCase().includes(lowerQuery) ||
-				item.tags.some((tag) => tag.toLowerCase().includes(lowerQuery)),
+				item.name.toLowerCase().includes(lowercaseQuery) ||
+				item.username?.toLowerCase().includes(lowercaseQuery) ||
+				item.url?.toLowerCase().includes(lowercaseQuery) ||
+				item.notes?.toLowerCase().includes(lowercaseQuery),
 		);
+	}
+
+	isLocked(): boolean {
+		return this.masterPassword === null;
+	}
+
+	export(): Vault {
+		this.resetAutoLock(); // Reset timer on activity
+		return { ...this.vault };
+	}
+
+	import(vault: Vault): void {
+		this.resetAutoLock(); // Reset timer on activity
+		this.vault = VaultSchema.parse(vault);
 	}
 
 	getSettings() {
@@ -178,13 +170,5 @@ export class VaultService {
 
 	updateSettings(settings: Partial<Vault["settings"]>) {
 		this.vault.settings = { ...this.vault.settings, ...settings };
-	}
-
-	export(): Vault {
-		return JSON.parse(JSON.stringify(this.vault));
-	}
-
-	import(data: Vault): void {
-		this.vault = VaultSchema.parse(data);
 	}
 }

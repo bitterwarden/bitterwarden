@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as LocalAuthentication from "expo-local-authentication";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { VaultProvider } from "./src/contexts/VaultContext";
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { SettingsScreen } from "./src/screens/SettingsScreen";
@@ -15,11 +15,7 @@ export default function App() {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		checkAuthStatus();
-	}, []);
-
-	async function checkAuthStatus() {
+	const checkAuthStatus = useCallback(async () => {
 		try {
 			const hasVault = await SecureStore.getItemAsync("hasVault");
 
@@ -41,7 +37,11 @@ export default function App() {
 		} finally {
 			setIsLoading(false);
 		}
-	}
+	}, []);
+
+	useEffect(() => {
+		checkAuthStatus();
+	}, [checkAuthStatus]);
 
 	if (isLoading) {
 		return null;
