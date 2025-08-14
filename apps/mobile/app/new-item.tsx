@@ -31,11 +31,17 @@ export default function NewItemScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
-				<TouchableOpacity style={styles.cancelButtonContainer} onPress={() => router.back()}>
+				<TouchableOpacity
+					style={styles.cancelButtonContainer}
+					onPress={() => router.back()}
+				>
 					<Text style={styles.cancelButton}>Cancel</Text>
 				</TouchableOpacity>
 				<Text style={styles.title}>New Item</Text>
-				<TouchableOpacity style={styles.saveButtonContainer} onPress={handleSave}>
+				<TouchableOpacity
+					style={styles.saveButtonContainer}
+					onPress={handleSave}
+				>
 					<Text style={styles.saveButton}>Save</Text>
 				</TouchableOpacity>
 			</View>

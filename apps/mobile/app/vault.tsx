@@ -26,7 +26,7 @@ export default function VaultScreen() {
 		const query = searchQuery.toLowerCase();
 		return (
 			item.name.toLowerCase().includes(query) ||
-			(item.username && item.username.toLowerCase().includes(query))
+			item.username?.toLowerCase().includes(query)
 		);
 	});
 

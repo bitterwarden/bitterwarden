@@ -15,7 +15,10 @@ export default function SettingsScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
-				<TouchableOpacity style={styles.backButtonContainer} onPress={() => router.back()}>
+				<TouchableOpacity
+					style={styles.backButtonContainer}
+					onPress={() => router.back()}
+				>
 					<Text style={styles.backButton}>← Back</Text>
 				</TouchableOpacity>
 				<Text style={styles.title}>Settings</Text>

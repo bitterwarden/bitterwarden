@@ -1,7 +1,7 @@
+import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import * as Clipboard from "expo-clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useVault } from "../context/VaultContext";
 
@@ -29,7 +29,10 @@ export default function ItemDetailScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
-				<TouchableOpacity style={styles.backButtonContainer} onPress={() => router.back()}>
+				<TouchableOpacity
+					style={styles.backButtonContainer}
+					onPress={() => router.back()}
+				>
 					<Text style={styles.backButton}>← Back</Text>
 				</TouchableOpacity>
 				<Text style={styles.title}>{item.name}</Text>
