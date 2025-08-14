@@ -1,33 +1,39 @@
-import {
-	DarkTheme,
-	DefaultTheme,
-	ThemeProvider,
-} from "@react-navigation/native";
-import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
-
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useVaultStore } from "@/stores/vault.store";
 
 export default function RootLayout() {
-	const colorScheme = useColorScheme();
-	const [loaded] = useFonts({
-		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-	});
+	const initialize = useVaultStore((state) => state.initialize);
 
-	if (!loaded) {
-		// Async font loading only occurs in development.
-		return null;
-	}
+	useEffect(() => {
+		initialize();
+	}, [initialize]);
 
 	return (
-		<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-			<Stack>
-				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-				<Stack.Screen name="+not-found" />
-			</Stack>
-			<StatusBar style="auto" />
-		</ThemeProvider>
+		<GestureHandlerRootView style={{ flex: 1 }}>
+			<SafeAreaProvider>
+				<StatusBar style="auto" />
+				<Stack
+					screenOptions={{
+						headerStyle: {
+							backgroundColor: "#000",
+						},
+						headerTintColor: "#fff",
+						headerTitleStyle: {
+							fontWeight: "bold",
+						},
+					}}
+				>
+					<Stack.Screen name="index" options={{ headerShown: false }} />
+					<Stack.Screen name="vault" options={{ title: "Vault" }} />
+					<Stack.Screen name="item/[id]" options={{ title: "Item Details" }} />
+					<Stack.Screen name="item/new" options={{ title: "New Item" }} />
+					<Stack.Screen name="settings" options={{ title: "Settings" }} />
+				</Stack>
+			</SafeAreaProvider>
+		</GestureHandlerRootView>
 	);
 }
