@@ -12,7 +12,6 @@
 		"dev": "turbo dev",
 		"build": "turbo build",
 		"test": "turbo test",
-		"lint": "turbo lint",
 		"clean": "turbo clean && rm -rf node_modules",
 		"pretty:write": "biome format --write",
 		"pretty": "biome format",
