@@ -44,7 +44,7 @@ export async function encryptWithKey(
 	const encoded = encoder.encode(data);
 
 	const encrypted = await crypto.subtle.encrypt(
-		{ name: "AES-GCM", iv },
+		{ name: "AES-GCM", iv: toArrayBuffer(iv) },
 		key,
 		encoded,
 	);
@@ -58,7 +58,7 @@ export async function decryptWithKey(
 	iv: Uint8Array,
 ): Promise<string> {
 	const decrypted = await crypto.subtle.decrypt(
-		{ name: "AES-GCM", iv },
+		{ name: "AES-GCM", iv: toArrayBuffer(iv) },
 		key,
 		encryptedData,
 	);
@@ -90,7 +90,7 @@ export async function encrypt(data: string, password: string): Promise<string> {
 	const iv = crypto.getRandomValues(new Uint8Array(12));
 
 	const encrypted = await crypto.subtle.encrypt(
-		{ name: "AES-GCM", iv },
+		{ name: "AES-GCM", iv: toArrayBuffer(iv) },
 		key,
 		encoder.encode(data),
 	);
@@ -125,7 +125,7 @@ export async function decrypt(
 	dataView.set(encrypted);
 
 	const decrypted = await crypto.subtle.decrypt(
-		{ name: "AES-GCM", iv },
+		{ name: "AES-GCM", iv: toArrayBuffer(iv) },
 		key,
 		dataArrayBuffer,
 	);

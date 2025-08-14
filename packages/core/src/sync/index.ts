@@ -1,12 +1,7 @@
 import git from "isomorphic-git";
 import http from "isomorphic-git/http/web";
 import type { EncryptedVault, GitConfig, SyncStatus } from "../types";
-
-interface FileSystem {
-	writeFile(path: string, data: string): Promise<void>;
-	readFile(path: string): Promise<string>;
-	exists(path: string): Promise<boolean>;
-}
+import type { GitFS } from "./fs-types";
 
 export class GitSyncService {
 	private config: GitConfig | null = null;
@@ -54,7 +49,7 @@ export class GitSyncService {
 		}
 	}
 
-	async clone(fs: FileSystem, dir: string): Promise<void> {
+	async clone(fs: GitFS, dir: string): Promise<void> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -87,7 +82,7 @@ export class GitSyncService {
 		}
 	}
 
-	async pull(fs: FileSystem, dir: string): Promise<boolean> {
+	async pull(fs: GitFS, dir: string): Promise<boolean> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -123,11 +118,7 @@ export class GitSyncService {
 		}
 	}
 
-	async push(
-		fs: FileSystem,
-		dir: string,
-		vault: EncryptedVault,
-	): Promise<void> {
+	async push(fs: GitFS, dir: string, vault: EncryptedVault): Promise<void> {
 		if (!this.config) {
 			throw new Error("Git sync not initialized");
 		}
@@ -137,7 +128,9 @@ export class GitSyncService {
 
 		try {
 			const vaultPath = `${dir}/vault.encrypted`;
-			await fs.writeFile(vaultPath, JSON.stringify(vault, null, 2));
+			await fs.promises.writeFile(vaultPath, JSON.stringify(vault, null, 2), {
+				encoding: "utf8",
+			});
 
 			await git.add({ fs, dir, filepath: "vault.encrypted" });
 
@@ -174,7 +167,7 @@ export class GitSyncService {
 		}
 	}
 
-	async checkForUpdates(fs: FileSystem, dir: string): Promise<boolean> {
+	async checkForUpdates(fs: GitFS, dir: string): Promise<boolean> {
 		if (!this.config) return false;
 
 		try {
