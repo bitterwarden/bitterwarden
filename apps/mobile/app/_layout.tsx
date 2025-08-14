@@ -28,7 +28,10 @@ export default function RootLayout() {
 				<Stack>
 					<Stack.Screen name="index" options={{ headerShown: false }} />
 					<Stack.Screen name="vault" options={{ headerShown: false }} />
-					<Stack.Screen name="new-item" options={{ headerShown: false, presentation: "modal" }} />
+					<Stack.Screen
+						name="new-item"
+						options={{ headerShown: false, presentation: "modal" }}
+					/>
 					<Stack.Screen name="item/[id]" options={{ headerShown: false }} />
 					<Stack.Screen name="settings" options={{ headerShown: false }} />
 					<Stack.Screen name="+not-found" />

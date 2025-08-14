@@ -1,30 +1,29 @@
-import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-	View,
-	Text,
 	FlatList,
-	TouchableOpacity,
 	StyleSheet,
+	Text,
 	TextInput,
+	TouchableOpacity,
+	View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import { useVault } from "./context/VaultContext";
 
 export default function VaultScreen() {
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState("");
-	const { items, lock, isLocked } = useVault();
+	const { items, isLocked } = useVault();
 
 	useEffect(() => {
 		if (isLocked) {
 			router.replace("/");
 		}
-	}, [isLocked]);
-
+	}, [isLocked, router.replace]);
 
 	const filteredItems = items.filter((item) =>
-		item.name.toLowerCase().includes(searchQuery.toLowerCase())
+		item.name.toLowerCase().includes(searchQuery.toLowerCase()),
 	);
 
 	return (
@@ -56,7 +55,7 @@ export default function VaultScreen() {
 				data={filteredItems}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => (
-					<TouchableOpacity 
+					<TouchableOpacity
 						style={styles.item}
 						onPress={() => router.push(`/item/${item.id}`)}
 					>

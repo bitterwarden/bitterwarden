@@ -1,14 +1,14 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-	View,
+	Alert,
+	StyleSheet,
 	Text,
 	TextInput,
 	TouchableOpacity,
-	StyleSheet,
-	Alert,
+	View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import { useVault } from "./context/VaultContext";
 
 export default function NewItemScreen() {

@@ -1,11 +1,6 @@
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	StyleSheet,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useVault } from "./context/VaultContext";
 
 export default function SettingsScreen() {
@@ -28,10 +23,7 @@ export default function SettingsScreen() {
 			</View>
 
 			<View style={styles.content}>
-				<TouchableOpacity 
-					style={styles.lockButton}
-					onPress={handleLock}
-				>
+				<TouchableOpacity style={styles.lockButton} onPress={handleLock}>
 					<Text style={styles.lockIcon}>🔒</Text>
 					<Text style={styles.lockButtonText}>Lock Vault</Text>
 				</TouchableOpacity>

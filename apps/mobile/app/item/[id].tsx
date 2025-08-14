@@ -1,13 +1,7 @@
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	StyleSheet,
-	Alert,
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter, useLocalSearchParams } from "expo-router";
 import { useVault } from "../context/VaultContext";
 
 export default function ItemDetailScreen() {
@@ -26,7 +20,7 @@ export default function ItemDetailScreen() {
 		);
 	}
 
-	const handleCopy = (text: string, label: string) => {
+	const handleCopy = (_text: string, label: string) => {
 		// In a real app, we'd use Clipboard API here
 		Alert.alert("Copied", `${label} copied to clipboard`);
 	};
@@ -48,7 +42,7 @@ export default function ItemDetailScreen() {
 						<View style={styles.valueContainer}>
 							<Text style={styles.value}>{item.username}</Text>
 							<TouchableOpacity
-								onPress={() => handleCopy(item.username!, "Username")}
+								onPress={() => handleCopy(item.username || "", "Username")}
 								style={styles.copyButtonContainer}
 							>
 								<Text style={styles.copyButton}>Copy</Text>

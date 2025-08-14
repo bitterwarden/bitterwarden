@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
 
 interface VaultItem {
 	id: string;
@@ -19,9 +19,24 @@ const VaultContext = createContext<VaultContextType | undefined>(undefined);
 
 // Some fake initial data
 const INITIAL_ITEMS: VaultItem[] = [
-	{ id: "1", name: "GitHub", username: "user@example.com", password: "secret123" },
-	{ id: "2", name: "Google", username: "user@gmail.com", password: "secret456" },
-	{ id: "3", name: "Amazon", username: "shopper@example.com", password: "secret789" },
+	{
+		id: "1",
+		name: "GitHub",
+		username: "user@example.com",
+		password: "secret123",
+	},
+	{
+		id: "2",
+		name: "Google",
+		username: "user@gmail.com",
+		password: "secret456",
+	},
+	{
+		id: "3",
+		name: "Amazon",
+		username: "shopper@example.com",
+		password: "secret789",
+	},
 ];
 
 export function VaultProvider({ children }: { children: ReactNode }) {

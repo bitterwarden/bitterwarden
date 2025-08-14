@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-	View,
+	Alert,
+	StyleSheet,
 	Text,
 	TextInput,
 	TouchableOpacity,
-	StyleSheet,
-	Alert,
+	View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 import { useVault } from "./context/VaultContext";
 
 export default function LoginScreen() {
@@ -20,7 +20,7 @@ export default function LoginScreen() {
 		if (!isLocked) {
 			router.replace("/vault");
 		}
-	}, [isLocked]);
+	}, [isLocked, router.replace]);
 
 	const handleUnlock = () => {
 		if (unlock(password)) {
