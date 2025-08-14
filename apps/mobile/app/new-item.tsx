@@ -31,11 +31,11 @@ export default function NewItemScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
-				<TouchableOpacity onPress={() => router.back()}>
+				<TouchableOpacity style={styles.cancelButtonContainer} onPress={() => router.back()}>
 					<Text style={styles.cancelButton}>Cancel</Text>
 				</TouchableOpacity>
 				<Text style={styles.title}>New Item</Text>
-				<TouchableOpacity onPress={handleSave}>
+				<TouchableOpacity style={styles.saveButtonContainer} onPress={handleSave}>
 					<Text style={styles.saveButton}>Save</Text>
 				</TouchableOpacity>
 			</View>
@@ -83,9 +83,19 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "600",
 	},
+	cancelButtonContainer: {
+		paddingVertical: 10,
+		paddingHorizontal: 15,
+		marginLeft: -15,
+	},
 	cancelButton: {
 		color: "#007AFF",
 		fontSize: 16,
+	},
+	saveButtonContainer: {
+		paddingVertical: 10,
+		paddingHorizontal: 15,
+		marginRight: -15,
 	},
 	saveButton: {
 		color: "#007AFF",

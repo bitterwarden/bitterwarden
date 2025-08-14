@@ -28,11 +28,11 @@ export default function ItemDetailScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={styles.header}>
-				<TouchableOpacity onPress={() => router.back()}>
-					<Text style={styles.backButton}>Back</Text>
+				<TouchableOpacity style={styles.backButtonContainer} onPress={() => router.back()}>
+					<Text style={styles.backButton}>← Back</Text>
 				</TouchableOpacity>
 				<Text style={styles.title}>{item.name}</Text>
-				<View style={{ width: 40 }} />
+				<View style={{ width: 60 }} />
 			</View>
 
 			<View style={styles.content}>
@@ -92,6 +92,11 @@ const styles = StyleSheet.create({
 		padding: 20,
 		borderBottomWidth: 1,
 		borderBottomColor: "#eee",
+	},
+	backButtonContainer: {
+		paddingVertical: 10,
+		paddingHorizontal: 15,
+		marginLeft: -15,
 	},
 	backButton: {
 		color: "#007AFF",
