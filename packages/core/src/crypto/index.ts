@@ -1,27 +1,37 @@
-import * as argon2 from 'argon2-browser';
-
 export class CryptoService {
   private static encoder = new TextEncoder();
   private static decoder = new TextDecoder();
+
+  private static toArrayBuffer(buffer: Uint8Array): ArrayBuffer {
+    // Create a new ArrayBuffer with the same content
+    const arrayBuffer = new ArrayBuffer(buffer.length);
+    const view = new Uint8Array(arrayBuffer);
+    view.set(buffer);
+    return arrayBuffer;
+  }
 
   static async deriveKey(
     password: string,
     salt: Uint8Array
   ): Promise<CryptoKey> {
-    const hashResult = await argon2.hash({
-      pass: password,
-      salt,
-      time: 3,
-      mem: 65536,
-      hashLen: 32,
-      parallelism: 4,
-      type: argon2.ArgonType.Argon2id,
-    });
-
-    return crypto.subtle.importKey(
+    // Use PBKDF2 for now, can switch to Argon2 later with proper WASM setup
+    const keyMaterial = await crypto.subtle.importKey(
       'raw',
-      hashResult.hash,
-      { name: 'AES-GCM' },
+      this.encoder.encode(password),
+      'PBKDF2',
+      false,
+      ['deriveBits', 'deriveKey']
+    );
+
+    return crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: this.toArrayBuffer(salt),
+        iterations: 100000,
+        hash: 'SHA-256',
+      },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
       false,
       ['encrypt', 'decrypt']
     );
@@ -49,7 +59,7 @@ export class CryptoService {
     iv: Uint8Array
   ): Promise<string> {
     const decrypted = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv },
+      { name: 'AES-GCM', iv: this.toArrayBuffer(iv) },
       key,
       encrypted
     );
@@ -63,18 +73,12 @@ export class CryptoService {
 
   static async hashPassword(password: string): Promise<string> {
     const salt = this.generateSalt();
-    const result = await argon2.hash({
-      pass: password,
-      salt,
-      time: 3,
-      mem: 65536,
-      hashLen: 32,
-      parallelism: 4,
-      type: argon2.ArgonType.Argon2id,
-    });
+    const key = await this.deriveKey(password, salt);
+    const exported = await crypto.subtle.exportKey('raw', key);
+    const hashBuffer = new Uint8Array(exported);
 
     return `${Buffer.from(salt).toString('base64')}:${Buffer.from(
-      result.hash
+      hashBuffer
     ).toString('base64')}`;
   }
 
@@ -86,17 +90,11 @@ export class CryptoService {
     const salt = Buffer.from(saltBase64, 'base64');
     const expectedHash = Buffer.from(hashBase64, 'base64');
 
-    const result = await argon2.hash({
-      pass: password,
-      salt: new Uint8Array(salt),
-      time: 3,
-      mem: 65536,
-      hashLen: 32,
-      parallelism: 4,
-      type: argon2.ArgonType.Argon2id,
-    });
+    const key = await this.deriveKey(password, new Uint8Array(salt));
+    const exported = await crypto.subtle.exportKey('raw', key);
+    const actualHash = new Uint8Array(exported);
 
-    return Buffer.from(result.hash).equals(expectedHash);
+    return Buffer.from(actualHash).equals(expectedHash);
   }
 
   static generatePassword(

@@ -23,8 +23,7 @@ bitterwarden/
 │   └── config/        # Shared configurations
 ├── apps/
 │   ├── extension/     # Browser extension (Chrome, Firefox, Edge)
-│   ├── mobile/        # React Native app (iOS & Android)
-│   └── web/           # Next.js web vault
+│   └── mobile/        # React Native app (iOS & Android)
 └── scripts/           # Build and deployment scripts
 ```
 
@@ -59,7 +58,6 @@ bun run dev
 # Run specific app
 cd apps/extension && bun run dev
 cd apps/mobile && bun run start
-cd apps/web && bun run dev
 ```
 
 ## Security
@@ -86,26 +84,11 @@ bun run build:ios
 bun run build:android
 ```
 
-### Web App
-
-```bash
-cd apps/web
-bun run build
-bun run start
-```
-
 ## Configuration
 
-### GitHub OAuth
+### GitHub Integration
 
-For GitHub sync, you'll need to set up OAuth:
-
-1. Create a GitHub OAuth App
-2. Set environment variables:
-   ```
-   GITHUB_CLIENT_ID=your_client_id
-   GITHUB_CLIENT_SECRET=your_client_secret
-   ```
+For GitHub sync, the extension will use GitHub's device flow or personal access tokens for authentication. This ensures the vault sync works without requiring a backend server.
 
 ### Custom Git Servers
 

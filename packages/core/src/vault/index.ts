@@ -52,8 +52,13 @@ export class VaultService {
 
       this.masterKey = await CryptoService.deriveKey(password, new Uint8Array(salt));
 
+      // Create a proper ArrayBuffer from the Buffer
+      const dataArrayBuffer = new ArrayBuffer(data.length);
+      const dataView = new Uint8Array(dataArrayBuffer);
+      dataView.set(data);
+
       const decrypted = await CryptoService.decrypt(
-        data,
+        dataArrayBuffer,
         this.masterKey,
         new Uint8Array(iv)
       );

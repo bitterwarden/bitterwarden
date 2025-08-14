@@ -19,7 +19,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "argon2-browser": "^1.18.0",
     "isomorphic-git": "^1.25.0",
     "zod": "^3.22.0"
   },
