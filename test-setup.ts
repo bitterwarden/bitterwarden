@@ -1,14 +1,19 @@
-import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { mock } from "bun:test";
+import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
 // Register Happy DOM globally for all tests
 GlobalRegistrator.register();
+
+interface BrowserMessage {
+	type?: string;
+	[key: string]: unknown;
+}
 
 // Mock browser extension APIs for extension tests
 const mockBrowserAPI = {
 	runtime: {
 		id: "test-extension-id",
-		sendMessage: mock((message: any) => {
+		sendMessage: mock((message: BrowserMessage) => {
 			// Return appropriate response based on message type
 			if (message?.type === "GET_ITEMS") {
 				return Promise.resolve([]);
@@ -38,6 +43,12 @@ const mockBrowserAPI = {
 	},
 };
 
+// Extend the global object to include chrome and browser
+declare global {
+	let chrome: typeof mockBrowserAPI;
+	let browser: typeof mockBrowserAPI;
+}
+
 // Both chrome and browser globals are needed for extension tests
-globalThis.chrome = mockBrowserAPI as any;
-globalThis.browser = mockBrowserAPI as any;
+globalThis.chrome = mockBrowserAPI;
+globalThis.browser = mockBrowserAPI;

@@ -44,16 +44,29 @@ describe("Input Component", () => {
 	it("should forward ref correctly", () => {
 		let inputRef: HTMLInputElement | null = null;
 		const TestComponent = () => {
-			return <Input ref={(el) => (inputRef = el)} data-testid="ref-input" />;
+			return (
+				<Input
+					ref={(el) => {
+						inputRef = el;
+					}}
+					data-testid="ref-input"
+				/>
+			);
 		};
-		
+
 		render(<TestComponent />);
 		const input = screen.getByTestId("ref-input");
 		expect(inputRef).toBe(input);
 	});
 
 	it("should accept value prop", () => {
-		render(<Input value="test value" onChange={() => {}} data-testid="value-input" />);
+		render(
+			<Input
+				value="test value"
+				onChange={() => {}}
+				data-testid="value-input"
+			/>,
+		);
 		const input = screen.getByTestId("value-input") as HTMLInputElement;
 		expect(input.value).toBe("test value");
 	});

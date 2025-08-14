@@ -1,6 +1,6 @@
+import type { EncryptedVault } from "@bitterwarden/core";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
-import type { EncryptedVault } from "@bitterwarden/core";
 
 const VAULT_KEY = "@bitterwarden/vault";
 const MASTER_HASH_KEY = "@bitterwarden/master-hash";

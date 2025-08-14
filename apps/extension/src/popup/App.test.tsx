@@ -1,10 +1,22 @@
 import { afterEach, beforeEach, describe, expect, it, mock } from "bun:test";
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+	cleanup,
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+} from "@testing-library/react";
 import browser from "webextension-polyfill";
 import { App } from "./App";
 
+interface BrowserMessage {
+	type: string;
+	password?: string;
+	encryptedVault?: unknown;
+}
+
 // Create a mock that returns different values based on message type
-const mockSendMessage = mock((message: any) => {
+const mockSendMessage = mock((message: BrowserMessage) => {
 	if (message?.type === "GET_ITEMS") {
 		return Promise.resolve([]);
 	}
@@ -38,40 +50,44 @@ describe("Extension Popup App", () => {
 
 	it("should handle unlock button click", async () => {
 		render(<App />);
-		
-		const passwordInput = screen.getByPlaceholderText(/Master Password/i) as HTMLInputElement;
+
+		const passwordInput = screen.getByPlaceholderText(
+			/Master Password/i,
+		) as HTMLInputElement;
 		const unlockButton = screen.getByRole("button", { name: /unlock/i });
-		
+
 		fireEvent.change(passwordInput, { target: { value: "testPassword123" } });
 		fireEvent.click(unlockButton);
-		
+
 		await waitFor(() => {
 			expect(mockSendMessage).toHaveBeenCalledWith({
 				type: "UNLOCK_VAULT",
-				password: "testPassword123"
+				password: "testPassword123",
 			});
 		});
 	});
 
 	it("should show error for empty password", () => {
 		render(<App />);
-		
+
 		const unlockButton = screen.getByRole("button", { name: /unlock/i });
 		fireEvent.click(unlockButton);
-		
+
 		// The button click shouldn't send message without password
 		expect(mockSendMessage).not.toHaveBeenCalled();
 	});
 
 	it("should show vault content when unlocked", async () => {
 		render(<App />);
-		
-		const passwordInput = screen.getByPlaceholderText(/Master Password/i) as HTMLInputElement;
+
+		const passwordInput = screen.getByPlaceholderText(
+			/Master Password/i,
+		) as HTMLInputElement;
 		const unlockButton = screen.getByRole("button", { name: /unlock/i });
-		
+
 		fireEvent.change(passwordInput, { target: { value: "testPassword123" } });
 		fireEvent.click(unlockButton);
-		
+
 		await waitFor(() => {
 			// Should show "No items in vault" message when unlocked with empty vault
 			expect(screen.getByText(/No items in vault/i)).toBeDefined();
@@ -82,22 +98,24 @@ describe("Extension Popup App", () => {
 
 	it("should handle lock button click when unlocked", async () => {
 		render(<App />);
-		
+
 		// First unlock
-		const passwordInput = screen.getByPlaceholderText(/Master Password/i) as HTMLInputElement;
+		const passwordInput = screen.getByPlaceholderText(
+			/Master Password/i,
+		) as HTMLInputElement;
 		const unlockButton = screen.getByRole("button", { name: /unlock/i });
-		
+
 		fireEvent.change(passwordInput, { target: { value: "testPassword123" } });
 		fireEvent.click(unlockButton);
-		
+
 		await waitFor(() => {
 			expect(screen.getByRole("button", { name: /lock/i })).toBeDefined();
 		});
-		
+
 		// Then lock
 		const lockButton = screen.getByRole("button", { name: /lock/i });
 		fireEvent.click(lockButton);
-		
+
 		await waitFor(() => {
 			expect(mockSendMessage).toHaveBeenCalledWith({ type: "LOCK_VAULT" });
 		});

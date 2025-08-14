@@ -1,15 +1,33 @@
-import { describe, expect, it, mock, beforeEach } from "bun:test";
+import { beforeEach, describe, expect, it, mock } from "bun:test";
+
+interface MockVaultService {
+	unlock: ReturnType<typeof mock>;
+	lock: ReturnType<typeof mock>;
+	addItem: ReturnType<typeof mock>;
+	getAllItems: ReturnType<typeof mock>;
+	searchItems: ReturnType<typeof mock>;
+	isLocked: ReturnType<typeof mock>;
+}
+
+interface MockStorage {
+	local: {
+		set: ReturnType<typeof mock>;
+		get: ReturnType<typeof mock>;
+	};
+}
 
 describe("Background Service", () => {
 	// Instead of importing the actual background script, we'll test the message handlers directly
-	let vaultService: any;
-	let storage: any;
+	let vaultService: MockVaultService;
+	let storage: MockStorage;
 
 	beforeEach(() => {
 		// Create mocked vault service
 		vaultService = {
 			unlock: mock(() => Promise.resolve()),
-			lock: mock(() => Promise.resolve({ data: "encrypted", salt: "", iv: "", version: 1 })),
+			lock: mock(() =>
+				Promise.resolve({ data: "encrypted", salt: "", iv: "", version: 1 }),
+			),
 			addItem: mock(() => ({ id: "test-id", name: "Test Item" })),
 			getAllItems: mock(() => []),
 			searchItems: mock(() => []),
@@ -39,7 +57,7 @@ describe("Background Service", () => {
 	it("should handle LOCK_VAULT message", async () => {
 		const encrypted = await vaultService.lock();
 		expect(vaultService.lock).toHaveBeenCalled();
-		
+
 		if (encrypted) {
 			await storage.local.set({ vault: encrypted });
 			expect(storage.local.set).toHaveBeenCalledWith({ vault: encrypted });
@@ -53,7 +71,7 @@ describe("Background Service", () => {
 			password: "password123",
 			url: "https://example.com",
 		};
-		
+
 		const result = vaultService.addItem(newItem);
 		expect(vaultService.addItem).toHaveBeenCalledWith(newItem);
 		expect(result).toHaveProperty("id");
