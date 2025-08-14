@@ -1,0 +1,10 @@
+{
+  "name": "@bitterwarden/config",
+  "version": "0.0.1",
+  "private": true,
+  "files": [
+    "eslint-preset.js",
+    "tsconfig.base.json",
+    "tailwind.config.js"
+  ]
+}
