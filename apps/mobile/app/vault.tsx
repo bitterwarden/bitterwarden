@@ -22,9 +22,13 @@ export default function VaultScreen() {
 		}
 	}, [isLocked, router.replace]);
 
-	const filteredItems = items.filter((item) =>
-		item.name.toLowerCase().includes(searchQuery.toLowerCase()),
-	);
+	const filteredItems = items.filter((item) => {
+		const query = searchQuery.toLowerCase();
+		return (
+			item.name.toLowerCase().includes(query) ||
+			(item.username && item.username.toLowerCase().includes(query))
+		);
+	});
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -44,12 +48,22 @@ export default function VaultScreen() {
 				</TouchableOpacity>
 			</View>
 
-			<TextInput
-				style={styles.searchInput}
-				placeholder="Search vault..."
-				value={searchQuery}
-				onChangeText={setSearchQuery}
-			/>
+			<View style={styles.searchContainer}>
+				<TextInput
+					style={styles.searchInput}
+					placeholder="Search names or usernames..."
+					value={searchQuery}
+					onChangeText={setSearchQuery}
+				/>
+				{searchQuery.length > 0 && (
+					<TouchableOpacity
+						style={styles.clearButton}
+						onPress={() => setSearchQuery("")}
+					>
+						<Text style={styles.clearButtonText}>✕</Text>
+					</TouchableOpacity>
+				)}
+			</View>
 
 			<FlatList
 				data={filteredItems}
@@ -113,15 +127,34 @@ const styles = StyleSheet.create({
 	settingsButtonText: {
 		fontSize: 24,
 	},
-	searchInput: {
-		height: 40,
+	searchContainer: {
+		flexDirection: "row",
+		alignItems: "center",
 		marginHorizontal: 20,
 		marginVertical: 10,
+		position: "relative",
+	},
+	searchInput: {
+		flex: 1,
+		height: 40,
 		paddingHorizontal: 15,
+		paddingRight: 40,
 		borderWidth: 1,
 		borderColor: "#ddd",
 		borderRadius: 8,
 		fontSize: 16,
+	},
+	clearButton: {
+		position: "absolute",
+		right: 0,
+		height: 40,
+		width: 40,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	clearButtonText: {
+		fontSize: 18,
+		color: "#999",
 	},
 	item: {
 		padding: 15,
