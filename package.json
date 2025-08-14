@@ -10,17 +10,19 @@
 	],
 	"scripts": {
 		"dev": "turbo dev",
+		"dev:extension": "turbo dev --filter=@bitterwarden/extension",
+		"dev:mobile": "turbo start --filter=@bitterwarden/mobile",
 		"build": "turbo build",
 		"test": "turbo test",
 		"test:coverage": "turbo test:coverage",
 		"typecheck": "turbo typecheck",
 		"clean": "turbo clean && rm -rf node_modules",
-		"pretty:write": "biome format --write",
-		"pretty": "biome format",
-		"lint:biome:write": "biome lint --write",
-		"lint:biome": "biome lint",
-		"check:write": "biome check --write",
-		"check": "biome check"
+		"lint": "biome lint",
+		"lint:write": "biome lint --write",
+		"format": "biome format",
+		"format:write": "biome format --write",
+		"check": "biome check",
+		"check:write": "biome check --write"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "2.1.4",

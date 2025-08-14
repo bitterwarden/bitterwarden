@@ -7,7 +7,7 @@ export class VaultService {
 	private vault: Vault;
 	private masterPassword: string | null = null;
 	private memoryPool: SecureMemoryPool;
-	private autoLockTimer: NodeJS.Timeout | null = null;
+	private autoLockTimer: ReturnType<typeof setTimeout> | null = null;
 	private readonly AUTO_LOCK_TIME = 5 * 60 * 1000; // 5 minutes
 
 	constructor() {
