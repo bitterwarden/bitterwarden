@@ -8,7 +8,6 @@ export class SecureMemory {
 	constructor(size: number) {
 		// Allocate memory for sensitive data
 		this.data = new Uint8Array(size);
-		this.view = new DataView(this.data.buffer);
 	}
 
 	/**
@@ -53,7 +52,6 @@ export class SecureMemory {
 
 		// Clear references
 		this.data = null;
-		this.view = null;
 	}
 
 	/**
