@@ -16,8 +16,8 @@
 		"clean": "turbo clean && rm -rf node_modules",
 		"pretty:write": "biome format --write",
 		"pretty": "biome format",
-		"lint:write": "biome lint --write",
-		"lint": "biome lint",
+		"lint:biome:write": "biome lint --write",
+		"lint:biome": "biome lint",
 		"check:write": "biome check --write",
 		"check": "biome check"
 	},
